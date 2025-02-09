@@ -9,18 +9,20 @@ import {
   Body,
 } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
+import { BooksService } from './books.service';
 
 @Controller('books')
 export class BooksController {
-  // GET /books?lang=en --> []    get all books can be with query params
+  constructor(private readonly booksService: BooksService) {}
+
+  // GET /books?title=&author=&genre= --> [] get all books with optional query params
   @Get()
-  getBooks(@Query('lang') lang: string) {
-    return [
-      {
-        title: 'Book 1',
-        lang,
-      },
-    ];
+  getBooks(
+    @Query('title') title: string,
+    @Query('author') author: string,
+    @Query('genre') genre: string,
+  ) {
+    return this.booksService.getBooks(title, author, genre);
   }
   // GEt /books/:id --> {}        get a book by id
   @Get(':id')
