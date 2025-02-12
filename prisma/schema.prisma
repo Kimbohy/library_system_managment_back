@@ -29,4 +29,3 @@ model Role {
   id        String   @id @default(cuid())
   roleName  String   @default("USER")
 }
-
