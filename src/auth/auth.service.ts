@@ -22,7 +22,7 @@ export class AuthService {
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
-
+    await this.updateRTHash(newUser.id, tokens.refresh_token);
     return tokens;
   }
 
