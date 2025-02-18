@@ -1,6 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
+import { UnauthorizedException } from '@nestjs/common';
 
 export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor() {
@@ -12,10 +13,11 @@ export class RtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   }
 
   validate(req: Request, payload: any) {
-    const refreshToken = req
-      .get('authorization')
-      ?.replace('Bearer ', '') // the '?' was not in the original video XD
-      .trim();
+    const authHeader = req.get('authorization');
+    if (!authHeader) {
+      throw new UnauthorizedException();
+    }
+    const refreshToken = authHeader.replace('Bearer ', '').trim();
     return {
       ...payload,
       refreshToken,
