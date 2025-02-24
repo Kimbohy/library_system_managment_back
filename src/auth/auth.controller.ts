@@ -37,12 +37,16 @@ export class AuthController {
     if (!user) {
       throw new Error('User not found');
     }
-    return this.authService.logout(user['id']);
+    return this.authService.logout(user['sub']);
   }
 
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/refresh')
-  refreshTokens() {
-    return this.authService.refreshTokens();
+  refreshTokens(@Req() req: Request) {
+    const user = req.user;
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return this.authService.refreshTokens(user['sub'], user['refreshToken']);
   }
 }

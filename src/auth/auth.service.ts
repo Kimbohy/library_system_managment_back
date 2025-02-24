@@ -22,7 +22,7 @@ export class AuthService {
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
-
+    await this.updateRTHash(newUser.id, tokens.refresh_token);
     return tokens;
   }
 
@@ -39,6 +39,7 @@ export class AuthService {
     if (!passwordMatches) throw new ForbiddenException('Access Denied');
 
     const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRTHash(user.id, tokens.refresh_token);
     return tokens;
   }
 
@@ -56,8 +57,22 @@ export class AuthService {
     });
   }
 
-  refreshTokens() {
-    throw new Error('Not implemented');
+  async refreshTokens(userId: string, rt: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      }
+    })
+    if (!user) throw new ForbiddenException('Access Denied');
+
+    if (!user.hashedRt) throw new ForbiddenException('Access Denied');
+
+    const rtMatches = await bcrypt.compare(rt, user.hashedRt);
+    if (!rtMatches) throw new ForbiddenException('Access Denied');
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRTHash(user.id, tokens.refresh_token);
+    return tokens;
   }
 
   async updateRTHash(userId: string, rt: string) {
