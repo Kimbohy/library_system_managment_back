@@ -1,30 +1,27 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="https://github.com/Kimbohy/authentication-with-nestJs" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Authentication with NestJS
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A robust JWT-based authentication system built with NestJS, Prisma, PostgreSQL, and Docker. This project implements a secure and scalable authentication solution that can be used as a foundation for any web application.
 
-# Library Management System - Authentication API
+## Features
 
-A robust JWT-based authentication system built with NestJS, Prisma, PostgreSQL, and Docker.
+- **Complete JWT Authentication Flow**:
+
+  - User registration & login with email/password
+  - Access token and refresh token strategy
+  - Token refresh mechanism
+  - Secure logout functionality
+  - Password hashing with bcrypt
+
+- **Security Best Practices**:
+  - Password hashing using bcrypt
+  - Short-lived access tokens (15 min)
+  - Refresh token rotation
+  - Token blacklisting on logout
+  - Secure storage of refresh tokens
 
 ## Tech Stack
 
@@ -33,16 +30,6 @@ A robust JWT-based authentication system built with NestJS, Prisma, PostgreSQL, 
 - **ORM**: Prisma
 - **Authentication**: JWT (JSON Web Tokens)
 - **Containerization**: Docker & Docker Compose
-
-## Authentication System Overview
-
-This project implements a complete JWT authentication flow with:
-
-- User registration & login with email/password
-- Access token and refresh token strategy
-- Token refresh mechanism
-- Secure logout functionality
-- Password hashing with bcrypt
 
 ## Project Setup
 
@@ -57,8 +44,8 @@ This project implements a complete JWT authentication flow with:
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd library_system_managment_back
+git clone https://github.com/Kimbohy/authentication-with-nestJs.git
+cd authentication-with-nestJs
 ```
 
 2. Install dependencies:
@@ -191,20 +178,18 @@ Response:
 
 ```
 # Database
-DATABASE_URL="postgresql://postgres:password@postgres:5432/library_db?schema=public"
-
-# JWT
-JWT_ACCESS_SECRET=at-secret
-JWT_REFRESH_SECRET=rt-secret
+DATABASE_URL="postgresql://postgres:password@postgres:5432/auth_db?schema=public"
 ```
 
 ## Authentication Implementation Details
 
-- Two JWT strategies: 'jwt' (access token) and 'jwt-refresh' (refresh token)
-- Passwords are hashed using bcrypt
-- Refresh tokens are stored as hashes in the database
-- Global guard with Public decorator for unprotected routes
-- Custom decorators for extracting user ID and data from JWT
+- **Two JWT Strategies**:
+  - 'jwt' for access tokens
+  - 'jwt-refresh' for refresh tokens
+- **Password Security**: All passwords are hashed using bcrypt
+- **Token Storage**: Refresh tokens are stored as hashes in the database
+- **Access Control**: Global guard with Public decorator for unprotected routes
+- **Developer Convenience**: Custom decorators for extracting user ID and data from JWT
 
 ## Development Commands
 
@@ -222,36 +207,47 @@ npx prisma generate
 npx prisma migrate dev
 ```
 
-## Security Best Practices
+## Project Structure
 
-- Passwords are hashed using bcrypt
-- JWT tokens have short expiration times (15 min for access token)
-- Refresh tokens are stored as hashes in the database
-- Automatic invalidation of refresh tokens after use
+```
+src/
+├── auth/
+│   ├── dto/
+│   │   └── auth.dto.ts
+│   ├── strategies/
+│   │   ├── at.strategy.ts
+│   │   └── rt.strategy.ts
+│   ├── types/
+│   │   └── tokens.type.ts
+│   ├── auth.controller.ts
+│   ├── auth.module.ts
+│   └── auth.service.ts
+├── common/
+│   ├── decorators/
+│   └── guards/
+├── prisma/
+│   └── prisma.service.ts
+└── main.ts
+```
 
-## Resources
+## Future Enhancements
 
-Check out a few resources that may come in handy when working with NestJS:
+- Email verification
+- Social login integration (Google, GitHub)
+- Multi-factor authentication
+- Role-based access control
+- Rate limiting for auth endpoints
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Contributing
 
-## Support
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Author
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- [Kimbohy](https://kimbohy.vercel.app) - Full Stack Developer
+- LinkedIn: [Lovatiana Rabarijaona](https://www.linkedin.com/in/lovatiana-rabarijaona/)
+- GitHub: [Kimbohy](https://github.com/Kimbohy)
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is [MIT licensed](LICENSE).
