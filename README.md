@@ -1,11 +1,5 @@
 <p align="center">
-  <a href="https://github.com/Kimbohy/authentication-with-nestJs" target="blank">
-      <svg width="346" height="278" viewBox="0 0 346 278" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M285 65H51V186H0V194H51V212H0V220H51V240L0 240V248L51 248V278H141V254H206V278H285V248L345.119 248V240L285 240V220L345.119 220V212L285 212V194H345.119V186H285V65ZM285 186H241.119V194H285V186ZM285 212H242.119V220H285V212ZM285 240H241.119V248H285V240ZM51 248H97V240H51V248ZM51 220H97V212H51V220ZM51 194H97V186H51V194ZM139 104H99V174H139V104ZM205 104H246V174H205V104Z" fill="#164730"/>
-        <rect width="99" height="99" fill="#164730"/>
-        <rect x="246" width="99" height="99" fill="#164730"/>
-        </svg>
-    </a>
+  <a href="https://github.com/Kimbohy/authentication-with-nestJs" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
 # Authentication with NestJS
@@ -212,6 +206,7 @@ npx prisma generate
 # Run migrations
 npx prisma migrate dev
 ```
+
 
 ## Future Enhancements
 
