@@ -63,7 +63,7 @@ export class AuthService {
         id: userId,
       }
     })
-    if (!user) throw new ForbiddenException('Access Denied');
+    if (!user || !user.hashedRt) throw new ForbiddenException('Access Denied');
 
     if (!user.hashedRt) throw new ForbiddenException('Access Denied');
 
