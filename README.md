@@ -207,28 +207,6 @@ npx prisma generate
 npx prisma migrate dev
 ```
 
-## Project Structure
-
-```
-src/
-├── auth/
-│   ├── dto/
-│   │   └── auth.dto.ts
-│   ├── strategies/
-│   │   ├── at.strategy.ts
-│   │   └── rt.strategy.ts
-│   ├── types/
-│   │   └── tokens.type.ts
-│   ├── auth.controller.ts
-│   ├── auth.module.ts
-│   └── auth.service.ts
-├── common/
-│   ├── decorators/
-│   └── guards/
-├── prisma/
-│   └── prisma.service.ts
-└── main.ts
-```
 
 ## Future Enhancements
 
