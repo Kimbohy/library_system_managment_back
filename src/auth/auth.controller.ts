@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
-import { Tokens } from './types';
+import { AuthResponse } from './types';
 import { RtGuard } from 'src/common/guards';
 import {
   GetCurrentUser,
@@ -24,14 +24,14 @@ export class AuthController {
   @Public()
   @Post('/local/signup')
   @HttpCode(HttpStatus.CREATED)
-  signupLocal(@Body() dto: AuthDto): Promise<Tokens> {
+  signupLocal(@Body() dto: AuthDto): Promise<AuthResponse> {
     return this.authService.signupLocal(dto);
   }
 
   @Public()
   @Post('/local/signin')
   @HttpCode(HttpStatus.OK)
-  signinLocal(@Body() dto: AuthDto): Promise<Tokens> {
+  signinLocal(@Body() dto: AuthDto): Promise<AuthResponse> {
     return this.authService.signinLocal(dto);
   }
 
