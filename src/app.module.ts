@@ -8,9 +8,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { UsersController } from './users/users.controller';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, UsersModule],
+  imports: [AuthModule, PrismaModule, UsersModule, AdminModule],
   controllers: [AppController, UsersController],
   providers: [
     AppService,

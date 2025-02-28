@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async signupLocal(dto: AuthDto): Promise<AuthResponse> {
-    const hash = await this.hashData(dto.password);
+    const hash = await AuthService.hashData(dto.password);
     const newUser = await this.prisma.user.create({
       data: {
         email: dto.email,
@@ -96,7 +96,7 @@ export class AuthService {
   }
 
   async updateRTHash(userId: string, rt: string) {
-    const hash = await this.hashData(rt);
+    const hash = await AuthService.hashData(rt);
     await this.prisma.user.update({
       where: {
         id: userId,
@@ -107,7 +107,7 @@ export class AuthService {
     });
   }
 
-  hashData(data: string) {
+  static hashData(data: string) {
     return bcrypt.hash(data, 10);
   }
 
