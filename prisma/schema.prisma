@@ -19,13 +19,16 @@ model User {
   email     String   @unique
   hash      String
   hashedRt  String?
-  role      Int      @default(0)
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  roleId    String @default("0")
+  role      Role @relation(fields: [roleId], references: [id])
 }
 
 model Role {
-  id        String   @id @default(cuid())
+  id        String   @id // No default to allow setting specific values
   roleName  String   @default("USER")
+
+  users User[]
 }

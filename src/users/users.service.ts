@@ -1,14 +1,18 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from './dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async getAllUsers() {
-    const users = await this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany({
+      include: {
+        role: true,
+      },
+    });
     return users;
   }
 
@@ -17,11 +21,15 @@ export class UsersService {
       where: {
         id,
       },
+      include: {
+        role: true,
+      },
     });
     return user;
   }
 
   async updateUser(id: string, dto: UpdateUserDto) {
+
     const user = await this.prisma.user.update({
       where: {
         id,

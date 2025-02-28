@@ -14,10 +14,33 @@ export class AuthService {
 
   async signupLocal(dto: AuthDto): Promise<AuthResponse> {
     const hash = await AuthService.hashData(dto.password);
+
+    // Use the USER role with ID "0"
+    const userRoleId = '0';
+
+    // Make sure the role exists
+    const roleExists = await this.prisma.role.findUnique({
+      where: { id: userRoleId },
+    });
+
+    if (!roleExists) {
+      // Create the role if it doesn't exist
+      await this.prisma.role.create({
+        data: {
+          id: userRoleId,
+          roleName: 'USER',
+        },
+      });
+    }
+
     const newUser = await this.prisma.user.create({
       data: {
         email: dto.email,
         hash,
+        roleId: userRoleId, // Always use "0" for USER role
+      },
+      include: {
+        role: true,
       },
     });
 
@@ -30,7 +53,10 @@ export class AuthService {
         id: newUser.id,
         email: newUser.email,
         name: newUser.name,
-        role: newUser.role,
+        role: {
+          id: newUser.role.id,
+          roleName: newUser.role.roleName,
+        },
         avatar: newUser.avatar,
       },
     };
@@ -40,6 +66,9 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
+      },
+      include: {
+        role: true,
       },
     });
 
@@ -57,7 +86,10 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role,
+        role: {
+          id: user.role.id,
+          roleName: user.role.roleName,
+        },
         avatar: user.avatar,
       },
     };

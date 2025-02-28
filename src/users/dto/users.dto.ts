@@ -1,13 +1,20 @@
-import { IsEmail, IsNotEmpty } from "class-validator";
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class UsersDto {
-  id: string;
-  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
   @IsEmail()
   email: string;
-  name: string;
-  role: number;
-  avatar: string;
+
+  @IsOptional()
+  @IsString()
+  avatar?: string;
+
+  @IsOptional()
+  @IsString()
+  role?: string; // This will hold the role ID
 }
 
 export class UpdateUserDto {
