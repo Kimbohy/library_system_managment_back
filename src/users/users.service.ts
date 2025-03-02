@@ -9,11 +9,30 @@ export class UsersService {
 
   async getAllUsers() {
     const users = await this.prisma.user.findMany({
-      include: {
-        role: true,
+      // Exclude sensitive fields
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+        phone: true,
+        roleId: true,
       },
     });
-    return users;
+
+    // Add membership status for each user
+    const usersWithMembershipStatus = await Promise.all(
+      users.map(async (user) => {
+        const membershipStatus = await this.getMembershipStatus(user.id);
+        return {
+          ...user,
+          membershipStatus,
+        };
+      }),
+    );
+
+    return usersWithMembershipStatus;
   }
 
   async getUserById(id: string) {
@@ -29,7 +48,6 @@ export class UsersService {
   }
 
   async updateUser(id: string, dto: UpdateUserDto) {
-
     const user = await this.prisma.user.update({
       where: {
         id,
@@ -84,5 +102,20 @@ export class UsersService {
 
   private hashData(data: string) {
     return bcrypt.hash(data, 10);
+  }
+
+  private async getMembershipStatus(userId) {
+    const membership = await this.prisma.membership.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+    let currantStatus = 'Inactive';
+    membership.forEach((element) => {
+      if (element.endDate && element.endDate > new Date()) {
+        currantStatus = 'Active';
+      }
+    });
+    return currantStatus;
   }
 }

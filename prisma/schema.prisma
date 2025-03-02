@@ -20,15 +20,77 @@ model User {
   hash      String
   hashedRt  String?
   avatar    String?
+  phone     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   roleId    String @default("0")
-  role      Role @relation(fields: [roleId], references: [id])
+
+  role      Roles @relation(fields: [roleId], references: [roleId])
+  membership Membership[]
+
+  borrowings Borrowings[]
 }
 
-model Role {
-  id        String   @id // No default to allow setting specific values
+model Membership {
+  membershipId String   @id
+  userId       String
+  startDate    DateTime @default(now())
+  endDate      DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Roles {
+  roleId        String   @id // No default to allow setting specific values
   roleName  String   @default("USER")
 
   users User[]
+}
+
+model Books {
+  isbn      String   @id
+  title     String
+  authorId  Int?
+  genreId   Int?
+  statusId  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  genre Genres? @relation(fields: [genreId], references: [genreId])
+  author Authors? @relation(fields: [authorId], references: [authorId])
+  status Status @relation(fields: [statusId], references: [statusId])
+
+  borrowings Borrowings[]
+}
+
+model Genres {
+  genreId   Int      @id
+  genreName String
+
+  books Books[]
+}
+
+model Authors {
+  authorId  Int     @id
+  fullName  String
+
+  books Books[]
+}
+
+model Status {
+  statusId  Int     @id
+  statusName String
+
+  books Books[]
+}
+
+model Borrowings {
+  borrowingId String   @id
+  bookIsbn    String
+  userId      String
+  borrowedDate DateTime @default(now())
+  dueDate     DateTime?
+
+  book Books @relation(fields: [bookIsbn], references: [isbn])
+  user User @relation(fields: [userId], references: [id])
 }

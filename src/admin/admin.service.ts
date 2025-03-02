@@ -14,15 +14,15 @@ export class AdminService {
     const adminRoleId = '1';
 
     // Make sure the role exists
-    const roleExists = await this.prisma.role.findUnique({
-      where: { id: adminRoleId },
+    const roleExists = await this.prisma.roles.findUnique({
+      where: { roleId: adminRoleId },
     });
 
     if (!roleExists) {
       // Create the role if it doesn't exist
-      await this.prisma.role.create({
+      await this.prisma.roles.create({
         data: {
-          id: adminRoleId,
+          roleId: adminRoleId,
           roleName: 'ADMIN',
         },
       });
@@ -46,7 +46,7 @@ export class AdminService {
       email: newUser.email,
       name: newUser.name,
       role: {
-        id: newUser.role.id,
+        id: newUser.roleId,
         roleName: newUser.role.roleName,
       },
       avatar: newUser.avatar,

@@ -19,15 +19,15 @@ export class AuthService {
     const userRoleId = '0';
 
     // Make sure the role exists
-    const roleExists = await this.prisma.role.findUnique({
-      where: { id: userRoleId },
+    const roleExists = await this.prisma.roles.findUnique({
+      where: { roleId: userRoleId },
     });
 
     if (!roleExists) {
       // Create the role if it doesn't exist
-      await this.prisma.role.create({
+      await this.prisma.roles.create({
         data: {
-          id: userRoleId,
+          roleId: userRoleId,
           roleName: 'USER',
         },
       });
@@ -54,7 +54,7 @@ export class AuthService {
         email: newUser.email,
         name: newUser.name,
         role: {
-          id: newUser.role.id,
+          id: newUser.roleId,
           roleName: newUser.role.roleName,
         },
         avatar: newUser.avatar,
@@ -87,7 +87,7 @@ export class AuthService {
         email: user.email,
         name: user.name,
         role: {
-          id: user.role.id,
+          id: user.roleId,
           roleName: user.role.roleName,
         },
         avatar: user.avatar,
