@@ -1,4 +1,12 @@
-import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 
 export class UsersDto {
   @IsOptional()
@@ -19,7 +27,7 @@ export class UsersDto {
 
   @IsOptional()
   @IsPhoneNumber()
-  phone?: string
+  phone?: string;
 }
 
 export class UpdateUserDto {
@@ -36,10 +44,12 @@ export class UpdateUserDto {
 
 export class UserWithMembershipDto extends UsersDto {
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   membershipStartDate?: Date;
 
   @IsOptional()
+  @Type(() => Date)
   @IsDate()
   membershipEndDate?: Date;
 }
@@ -47,5 +57,5 @@ export class UserWithMembershipDto extends UsersDto {
 export class NewUserDto extends UserWithMembershipDto {
   @IsNotEmpty()
   @IsString()
-  password: string
+  password: string;
 }
