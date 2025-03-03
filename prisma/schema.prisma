@@ -32,7 +32,7 @@ model User {
 }
 
 model Membership {
-  membershipId String   @id
+  membershipId String   @id @default(cuid())
   userId       String
   startDate    DateTime @default(now())
   endDate      DateTime?

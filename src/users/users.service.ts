@@ -1,7 +1,8 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateUserDto } from './dto';
+import { NewUserDto, UpdateUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UsersService {
@@ -45,6 +46,49 @@ export class UsersService {
       },
     });
     return user;
+  }
+
+  async createNewUser(dto: NewUserDto) {
+    const existingUser = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+
+    if (existingUser) throw new ForbiddenException('Email already in use');
+
+    const hash = await AuthService.hashData(dto.password);
+
+    const userRoleId = '0'; // 'User' role
+
+    const newUser = await this.prisma.user.create({
+      data: {
+        email: dto.email,
+        name: dto.name,
+        phone: dto.phone,
+        hash,
+        roleId: userRoleId,
+      },
+    });
+
+    // Create membership if start and end dates are provided
+    if (dto.membershipStartDate && dto.membershipEndDate) {
+      await this.prisma.membership.create({
+        data: {
+          userId: newUser.id,
+          startDate: new Date(dto.membershipStartDate),
+          endDate: new Date(dto.membershipEndDate),
+        },
+      });
+    }
+
+    return {
+      id: newUser.id,
+      email: newUser.email,
+      name: newUser.name,
+      roleId: newUser.roleId,
+      avatar: newUser.avatar,
+    };
   }
 
   async updateUser(id: string, dto: UpdateUserDto) {
@@ -112,8 +156,15 @@ export class UsersService {
     });
     let currantStatus = 'Inactive';
     membership.forEach((element) => {
-      if (element.endDate && element.endDate > new Date()) {
-        currantStatus = 'Active';
+      if (element.startDate && element.startDate > new Date()) {
+        currantStatus = 'Pending';
+      }
+      if (
+        element.endDate &&
+        element.endDate > new Date() &&
+        element.startDate <= new Date()
+      ) {
+        return (currantStatus = 'Active');
       }
     });
     return currantStatus;
