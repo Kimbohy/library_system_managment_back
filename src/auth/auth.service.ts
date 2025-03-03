@@ -13,6 +13,17 @@ export class AuthService {
   ) {}
 
   async signupLocal(dto: AuthDto): Promise<AuthResponse> {
+    // Check if a user with the email already exists
+    const existingUser = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+
+    if (existingUser) {
+      throw new ForbiddenException('Email already in use');
+    }
+    
     const hash = await AuthService.hashData(dto.password);
 
     // Use the USER role with ID "0"
@@ -117,7 +128,7 @@ export class AuthService {
     });
     if (!user || !user.hashedRt) throw new ForbiddenException('Access Denied');
 
-    if (!user.hashedRt) throw new ForbiddenException('Access Denied');
+    // if (!user.hashedRt) throw new ForbiddenException('Access Denied');
 
     const rtMatches = await bcrypt.compare(rt, user.hashedRt);
     if (!rtMatches) throw new ForbiddenException('Access Denied');
