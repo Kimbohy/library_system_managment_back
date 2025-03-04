@@ -28,7 +28,7 @@ export class UsersService {
         const membershipStatus = await this.getMembershipStatus(user.id);
         return {
           ...user,
-          membershipStatus,
+          ...membershipStatus,
         };
       }),
     );
@@ -155,18 +155,28 @@ export class UsersService {
       },
     });
     let currantStatus = 'Inactive';
+    let startDate = new Date();
+    let endDate = new Date();
     membership.forEach((element) => {
       if (element.startDate && element.startDate > new Date()) {
         currantStatus = 'Pending';
+        startDate = element.startDate;
+        endDate = element.endDate || new Date();
       }
       if (
         element.endDate &&
         element.endDate > new Date() &&
         element.startDate <= new Date()
       ) {
-        return (currantStatus = 'Active');
+        return {
+          membershipStatus: 'Active',
+          startDate: element.startDate,
+          endDate: element.endDate,
+        };
       }
     });
-    return currantStatus;
+    return {
+      membershipStatus: currantStatus,
+    };
   }
 }
