@@ -26,6 +26,8 @@ export class UsersService {
     const usersWithMembershipStatus = await Promise.all(
       users.map(async (user) => {
         const membershipStatus = await this.getMembershipStatus(user.id);
+        console.log(user?.name, membershipStatus);
+
         return {
           ...user,
           ...membershipStatus,
@@ -154,29 +156,22 @@ export class UsersService {
         userId: userId,
       },
     });
-    let currantStatus = 'Inactive';
-    let startDate = new Date();
-    let endDate = new Date();
-    membership.forEach((element) => {
-      if (element.startDate && element.startDate > new Date()) {
-        currantStatus = 'Pending';
-        startDate = element.startDate;
-        endDate = element.endDate || new Date();
-      }
-      if (
-        element.endDate &&
-        element.endDate > new Date() &&
-        element.startDate <= new Date()
-      ) {
-        return {
-          membershipStatus: 'Active',
-          startDate: element.startDate,
-          endDate: element.endDate,
-        };
-      }
-    });
+
+    const now = new Date();
+    const activeMembership = membership.find(
+      (m) => m.startDate <= now && (m.endDate === null || m.endDate >= now),
+    );
+
+    const pendingMembership = membership.find((m) => m.startDate > now);
+
     return {
-      membershipStatus: currantStatus,
+      membershipStatus: activeMembership
+        ? 'Active'
+        : pendingMembership
+          ? 'Pending'
+          : 'Inactive',
+      startDate: activeMembership?.startDate || pendingMembership?.startDate,
+      endDate: activeMembership?.endDate || pendingMembership?.endDate,
     };
   }
 }
