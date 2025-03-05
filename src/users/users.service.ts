@@ -26,7 +26,6 @@ export class UsersService {
     const usersWithMembershipStatus = await Promise.all(
       users.map(async (user) => {
         const membershipStatus = await this.getMembershipStatus(user.id);
-        console.log(user?.name, membershipStatus);
 
         return {
           ...user,
