@@ -169,8 +169,10 @@ export class UsersService {
         : pendingMembership
           ? 'Pending'
           : 'Inactive',
-      startDate: activeMembership?.startDate || pendingMembership?.startDate,
-      endDate: activeMembership?.endDate || pendingMembership?.endDate,
+      membershipStartDate:
+        activeMembership?.startDate || pendingMembership?.startDate,
+      membershipEndDate:
+        activeMembership?.endDate || pendingMembership?.endDate,
     };
   }
 }
